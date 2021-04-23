@@ -1,27 +1,14 @@
 package io.sytac.syco;
 
-import java.security.MessageDigest;
+import org.apache.commons.codec.digest.DigestUtils;
+
 import java.time.LocalDateTime;
 
-public class Block {
+record Block(int index, String previousHash, LocalDateTime timeStamp, Transaction transaction, String hash) {
 
-    private final int index;
-    private final String previousHash;
-    private final LocalDateTime timestamp;
-    private final Transaction transaction;
-    private String hash;
-    private final MessageDigest digest = null; // Use SHA-256
-
-
-    public Block(int index, String previousHash, LocalDateTime timestamp, Transaction transaction) {
-        this.index = index;
-        this.previousHash = previousHash;
-        this.timestamp = timestamp;
-        this.transaction = transaction;
-        this.hash = calculateHash();
+    Block(int index, String previousHash, LocalDateTime timeStamp, Transaction transaction) {
+        this(index, previousHash, timeStamp, transaction, digest.digestAsHex("" + index + timeStamp + transaction + previousHash));
     }
 
-    private String calculateHash() {
-        throw new UnsupportedOperationException("Return hash of index, timestamp, transaction");
-    }
+    static DigestUtils digest = new DigestUtils("SHA3-256");
 }

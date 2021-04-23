@@ -1,27 +1,30 @@
 package io.sytac.syco;
 
+import java.time.LocalDateTime;
+import java.util.LinkedList;
+
 public class SytacBlockchain implements Blockchain {
+    LinkedList<Block> chain;
 
     public SytacBlockchain() {
-        // TODO: Create Genesis Block, index = 0. previous hash = ""
-        // Use a simple collections object, no need to get fancy with merkle trees etc.
+        this.chain = new LinkedList<>();
+        chain.add(new Block(0,"", LocalDateTime.now(), null));
     }
 
     @Override
     public void addBlock(Block newBlock) {
-        throw new UnsupportedOperationException("Check if chain is valid before adding block. If chain isn't valid do nothing");
-        //TODO: Validate block transaction data. transaction values must be greater than 0
-        //TODO: For each block on the chain currentBlock.hash must be equal to currentBlock.calculateHash()
-        //TODO: For each block on the chain currentBlock.previousHash must be equal to previousBlock.hash
+        if (newBlock.transaction().amount() > 0 && newBlock.index() == length() && getLatestHash().equals(newBlock.previousHash())) {
+               chain.add(newBlock);
+        }
     }
 
     @Override
     public String getLatestHash() {
-        throw new UnsupportedOperationException("Return latest hash from the blockchain");
+      return chain.getLast().hash();
     }
 
     @Override
     public int length() {
-        throw new UnsupportedOperationException("Return length of blockchain");
+        return chain.size();
     }
 }

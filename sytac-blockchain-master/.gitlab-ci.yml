@@ -1,0 +1,16 @@
+image: maven:3.6.3-openjdk-11-slim
+
+stages:
+  - test
+
+test:
+  stage: test
+  script:
+    - mvn verify
+  artifacts:
+    reports:
+      junit:
+        - target/surefire-reports/TEST-*.xml
+        - target/failsafe-reports/TEST-*.xml
+  rules:
+    - if: $CI_COMMIT_REF_NAME != "master"
